@@ -1,22 +1,22 @@
-import Dragon from "./dragon.js";
+import Generation from "./generation.js";
+import GenerationEngine from "./engine.js";
 
-const fooey = new Dragon({ 
-    birthdate: new Date(), 
-    nickname: 'fooey'
-})
-const baloo = new Dragon({ 
-    nickname: 'baloo',
-    birthdate: new Date(), 
-})
+const engine = new GenerationEngine();
 
-const goobey = new Dragon()
+engine.start();
 
 setTimeout(() => {
-    const mimar = new Dragon()
-    console.log('mimar', mimar)
+    engine.stop();
+}, 20000);
+// const generation = new Generation();
+// console.log('generation', generation)
 
-}, 2000)
+// const goobey = generation.newDragon()
 
-console.log('fooey', fooey)
-console.log('baloo', baloo)
-console.log('goobey', goobey)
+// console.log('goobey', goobey)
+
+// setTimeout(() => {
+//     const mimar = generation.newDragon()
+
+//     console.log('mimar', mimar)
+// }, 15000)
