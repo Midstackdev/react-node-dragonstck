@@ -1,4 +1,4 @@
-import Generation from "./generation.js";
+import Generation from "./index.js";
 
 
 class GenerationEngine {

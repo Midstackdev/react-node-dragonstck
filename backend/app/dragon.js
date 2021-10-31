@@ -1,7 +1,7 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-const TRAITS = require('./trait.json');
+const TRAITS = require('../data/trait.json');
 // import TRAITS from './trait.json'
 
 const DEFAULT_PROPERTIES = {

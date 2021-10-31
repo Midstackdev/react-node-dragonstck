@@ -1,5 +1,5 @@
-import Dragon from './dragon.js';
-import { REFRESH_RATE, SECONDS } from './config.js';
+import Dragon from '../dragon.js';
+import { REFRESH_RATE, SECONDS } from '../config.js';
 
 const refreshRate = REFRESH_RATE * SECONDS;
 
