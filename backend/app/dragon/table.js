@@ -1,4 +1,5 @@
 import pool from "../../databasePool.js";
+import DragonTraitTable from "../dragonTrait/table.js";
 
 class DragonTable {
     static storeDragon(dragon) {
@@ -14,7 +15,14 @@ class DragonTable {
 
                     const dragonId = response.rows[0].id;
 
-                    resolve({ dragonId });
+                    Promise.all(dragon.traits.map(({ traitType, traitValue }) => {
+                        return DragonTraitTable.storeDragonTrait({
+                            dragonId, traitType, traitValue
+                        });
+                    }))
+                    .then(() => resolve({ dragonId }))
+                    .catch(error => reject(error));
+
                 }
             )
         })
