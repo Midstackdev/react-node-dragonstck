@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { registerRoutes } from "./api/index.js";
 import GenerationEngine from "./generation/engine.js";
 
@@ -7,6 +8,8 @@ const app = express();
 const engine = new GenerationEngine();
 
 app.locals.engine = engine;
+
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 registerRoutes(app);
 
