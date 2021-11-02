@@ -1,13 +1,14 @@
 
 import './App.css';
+import Dragon from './components/Dragon';
 import Generation from './components/Generation';
 
 const App = () => {
   return (
     <div className="App">
-      <h1>Dragon Stack</h1>
-      <h2>Dragon Stack from React</h2>
+      <h2>Dragon Stack</h2>
       <Generation/>
+      <Dragon/>
     </div>
   );
 }
