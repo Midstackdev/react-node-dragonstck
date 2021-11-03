@@ -40,6 +40,8 @@ const DragonAvatar = ({ dragon }) => {
             </div>
     )}
 
+    if(!dragonId) return <div></div>
+
     return (
         <div>
             <span>G{generationId}</span>

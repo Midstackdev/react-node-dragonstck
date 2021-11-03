@@ -1,31 +1,20 @@
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDragon } from "../actions/dragonActions";
 import DragonAvatar from "./DragonAvatar";
 
 
-const DEFAULT_DRAGON = { traits: [], generationId: '', dragonId: '' };
-
 const Dragon = () => {
-    const [dragon, setDragon] = useState(DEFAULT_DRAGON);
+    const dispatch = useDispatch();
+    const dragon = useSelector(state => state.dragon)
 
-    // const { generationId, dragonId, traits } = dragon;
-
-    const fetchDragon = useCallback(async() => {
-        try {
-            const {data} = await axios.get(`dragon/new`)
-            setDragon(data.dragon)
-        } catch (error) {
-            console.error(error)
-        }
-    }, [])
-
-    useEffect(() => {
-        fetchDragon()
-    }, [fetchDragon])
+    // useEffect(() => {
+    //     dispatch(fetchDragon())
+    // }, [dispatch])
 
     return dragon && (
         <div>
-            <button className="btn btn-dark" onClick={fetchDragon}>New Dragon</button>
+            <button className="btn btn-dark" onClick={() => dispatch(fetchDragon())}>New Dragon</button>
             <DragonAvatar dragon={dragon} />
         </div>
     )
