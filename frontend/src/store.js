@@ -1,16 +1,15 @@
-import axios from 'axios';
-import { createStore } from 'redux';
-import { generationActionCreator } from './actions/generationActions';
-import { generationReducer } from './reducers/generationReducer';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers';
 
 
-const store = createStore(generationReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-store.subscribe(() => console.log('store state update', store.getState()))
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+
+// store.subscribe(() => console.log('store state update', store.getState()))
 
 
-axios.get(`/generation`)
-    .then(({ data }) => store.dispatch(generationActionCreator(data)))
 
 
 export default store;

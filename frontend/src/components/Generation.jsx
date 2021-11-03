@@ -1,33 +1,29 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import axios from 'axios'
+import { useCallback, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchGeneration } from '../actions/generationActions';
+import fetchStates from '../reducers/fetchStates';
 
-const DEFAULT_GENERATION = { expiration: '', generationId: '' };
 const MINIMUM_DELAY = 3000;
 
 const Generation = () => {
-    const [generation, setGeneration] = useState(DEFAULT_GENERATION);
-    let timer = useRef(null);
+    
+    const timer = useRef(null);
+    const dispatch = useDispatch();
+    const generation = useSelector(state => state.generation)
 
-    const fetchGeneration = useCallback(async() => {
-        try {
-            const {data} = await axios.get(`generation`)
-            setGeneration(data.generation)
-        } catch (error) {
-            console.error(error)
-        }
-    }, [])
+    const { generationId, expiration, status } = generation;
 
     const fetchNextGeneration = useCallback(() => {
-        fetchGeneration();
+        dispatch(fetchGeneration());
 
-        let delay = new Date(generation.expiration).getTime() - new Date().getTime();
+        let delay = new Date(expiration).getTime() - new Date().getTime();
         
         if(delay < MINIMUM_DELAY) {
             delay = MINIMUM_DELAY;
         }
 
         timer.current = setTimeout(() => fetchNextGeneration(), delay);
-    }, [fetchGeneration, generation.expiration])
+    }, [dispatch, expiration])
     
     useEffect(() => {
         fetchNextGeneration()
@@ -41,10 +37,14 @@ const Generation = () => {
         }
     }, [])
 
+    if(status === fetchStates.error) {
+        return (<div>{generation.message}</div>)
+    }
+
     return generation && (
         <div>
-            <h3>Generation {generation.generationId}. Expires on:</h3>
-            <h4>{new Date(generation.expiration).toString()}</h4>
+            <h3>Generation {generationId}. Expires on:</h3>
+            <h4>{new Date(expiration).toString()}</h4>
         </div>
     )
 }
