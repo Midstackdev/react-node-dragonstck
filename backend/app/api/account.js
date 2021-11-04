@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { hash } from '../account/helper.js';
+import Session from '../account/session.js';
 import AccountTable from '../account/table.js';
 import { setSession } from './helper.js';
 
@@ -59,6 +60,22 @@ router.post('/login', (req, res, next) => {
         })
         .catch(error => next(error));
     
+});
+
+router.get('/logout', (req, res, next) => {
+    const { username } = Session.parse(req.cookies.sessionString);
+    console.log(req.sessionString)
+
+    AccountTable.updateSessionid({
+        sessionId: null,
+        usernameHash: hash(username)
+    })
+    .then(() => {
+        res.clearCookie('sessionString');
+
+        res.json({ message: 'Successful logout' });
+    })
+    .catch(error => next(error));
 });
 
 export default router;
