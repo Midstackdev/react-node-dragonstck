@@ -7,21 +7,24 @@ import fetchStates from "../reducers/fetchStates";
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [buttonClicked, setButtonClicked] = useState(false)
     const dispatch = useDispatch();
     const { status, message } = useSelector(state => state.account);
 
     const handleLogin = (e) => {
+        setButtonClicked(true);
         e.preventDefault();
         dispatch(login({ username, password}));
     }
     
     const handleSignup = (e) => {
+        setButtonClicked(true);
         e.preventDefault();
         dispatch(signup({ username, password}));
     }
 
     const DisplayError = () => {
-        if(status === fetchStates.error) {
+        if(buttonClicked && status === fetchStates.error) {
             return <div className="text-danger">{message}</div>
         }
     }

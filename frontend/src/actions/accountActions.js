@@ -69,3 +69,21 @@ export const logout = () => async(dispatch) => {
         console.error(error.response)
     }
 }
+
+export const fetchAuthenticated = () => async(dispatch) => {
+    dispatch({ type: ACCOUNT.FETCH })
+    try {
+        const {data} = await axios.get(`account/auth`);
+        console.log(data)
+        dispatch({
+            type: ACCOUNT.FETCH_AUTHENTICATED_SUCCESS,
+            ...data
+        })
+    } catch (error) {
+        dispatch({ 
+            type: ACCOUNT.FETCH_ERROR,
+            message: error.response && error.response.data.message ? error.response.data.message : error.response
+        })
+        console.error(error.response)
+    }
+}

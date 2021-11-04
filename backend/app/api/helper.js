@@ -16,7 +16,7 @@ export const setSession = ({ username, res, sessionId }) => {
             session = new Session({ username });
             sessionString = session.toString();
 
-            AccountTable.updateSessionid({
+            AccountTable.updateSessionId({
                 sessionId: session.id,
                 usernameHash: hash(username)
             })

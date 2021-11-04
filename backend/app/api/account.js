@@ -66,7 +66,7 @@ router.get('/logout', (req, res, next) => {
     const { username } = Session.parse(req.cookies.sessionString);
     console.log(req.sessionString)
 
-    AccountTable.updateSessionid({
+    AccountTable.updateSessionId({
         sessionId: null,
         usernameHash: hash(username)
     })
@@ -76,6 +76,29 @@ router.get('/logout', (req, res, next) => {
         res.json({ message: 'Successful logout' });
     })
     .catch(error => next(error));
+});
+
+router.get('/auth', (req, res, next) => {
+    const { sessionString } = req.cookies;
+
+    if(!sessionString || !Session.verify(sessionString)) {
+        const error = new Error('Invalid session');
+
+        error.statusCode = 400;
+
+        return next(error);
+    }else {
+        const { username, id } = Session.parse(sessionString);
+
+        AccountTable.getAccount({ username: hash(username) })
+            .then(({ account }) => {
+                const authenticated = account.sessionId === id;
+
+                res.json({ authenticated });
+            })
+            .catch(error => next(error));
+    }
+
 });
 
 export default router;

@@ -4,13 +4,19 @@ import './index.css';
 import App from './App';
 import {  Provider } from 'react-redux';
 import store from './store';
+import { fetchAuthenticated } from './actions/accountActions';
 
-ReactDOM.render(
-  <Provider store={store}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </Provider>,
-  document.getElementById('root')
-);
+store.dispatch(fetchAuthenticated())
+  .then(() => {
+    ReactDOM.render(
+      <Provider store={store}>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </Provider>,
+      document.getElementById('root')
+    );
+
+  });
+
 

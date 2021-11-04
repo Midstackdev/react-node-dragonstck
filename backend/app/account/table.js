@@ -30,7 +30,7 @@ class AccountTable {
         })
     }
 
-    static updateSessionid({ sessionId, usernameHash }) {
+    static updateSessionId({ sessionId, usernameHash }) {
         return new Promise((resolve, reject) => {
             pool.query(
                 'UPDATE account SET "sessionId" = $1 WHERE "usernameHash" = $2',
