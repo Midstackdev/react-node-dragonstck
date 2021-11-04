@@ -1,16 +1,27 @@
 import { Router } from 'express';
+import AccountDragonTable from '../accountDragon/table.js';
 import DragonTable from '../dragon/table.js';
+import { authenticateAccount } from './helper.js';
 
 const router = new Router();
 
 router.get('/new', (req, res, next) => {
-    const dragon = req.app.locals.engine.generation.newDragon();
+    let accountId, dragon;
 
-    DragonTable.storeDragon(dragon)
+    authenticateAccount({ sessionString: req.cookies.sessionString })
+        .then(({ account }) => {
+            accountId = account.id;
+
+            dragon = req.app.locals.engine.generation.newDragon();
+
+            return DragonTable.storeDragon(dragon);
+        })
         .then(({ dragonId }) => {
             dragon.dragonId = dragonId;
-            res.json({ dragon });
+
+            return AccountDragonTable.storeAccountDragon({ accountId, dragonId });
         })
+        .then(() => res.json({ dragon }))
         .catch(error => next(error));
 });
 

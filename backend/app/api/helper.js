@@ -37,3 +37,25 @@ const setSessionCookie = ({ sessionString, res }) => {
         // secure: true // use with https
     });
 }
+
+export const authenticateAccount = ({ sessionString }) => {
+    return new Promise((resolve, reject) => {
+        if(!sessionString || !Session.verify(sessionString)) {
+            const error = new Error('Invalid session');
+    
+            error.statusCode = 400;
+    
+            return reject(error);
+        }else {
+            const { username, id } = Session.parse(sessionString);
+    
+            AccountTable.getAccount({ username: hash(username) })
+                .then(({ account }) => {
+                    const authenticated = account.sessionId === id;
+    
+                    resolve({ account, authenticated });
+                })
+                .catch(error => reject(error));
+        }
+    });
+}

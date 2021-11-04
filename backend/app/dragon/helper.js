@@ -26,6 +26,6 @@ const getDragonWithTraits = ({ dragonId }) => {
     .catch(error => console.error(error));
 }
 
-export default {
+export {
     getDragonWithTraits
 }

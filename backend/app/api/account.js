@@ -2,7 +2,9 @@ import { Router } from 'express';
 import { hash } from '../account/helper.js';
 import Session from '../account/session.js';
 import AccountTable from '../account/table.js';
-import { setSession } from './helper.js';
+import AccountDragonTable from '../accountDragon/table.js';
+import { getDragonWithTraits } from '../dragon/helper.js';
+import { authenticateAccount, setSession } from './helper.js';
 
 const router = new Router();
 
@@ -81,24 +83,28 @@ router.get('/logout', (req, res, next) => {
 router.get('/auth', (req, res, next) => {
     const { sessionString } = req.cookies;
 
-    if(!sessionString || !Session.verify(sessionString)) {
-        const error = new Error('Invalid session');
+    authenticateAccount({ sessionString })
+        .then(({ authenticated }) => res.json({ authenticated }))
+        .catch(error => next(error));
 
-        error.statusCode = 400;
+});
 
-        return next(error);
-    }else {
-        const { username, id } = Session.parse(sessionString);
+router.get('/dragons', (req, res, next) => {
 
-        AccountTable.getAccount({ username: hash(username) })
-            .then(({ account }) => {
-                const authenticated = account.sessionId === id;
+    authenticateAccount({ sessionString: req.cookies.sessionString })
+        .then(({ account }) => {
 
-                res.json({ authenticated });
-            })
-            .catch(error => next(error));
-    }
-
+            return AccountDragonTable.getAccountDragons({ accountId: account.id });
+        })
+        .then(({ accountDragons }) => {
+            return Promise.all(
+                accountDragons.map(accountDragon => {
+                    return getDragonWithTraits({ dragonId: accountDragon.dragonId })
+                })
+            );
+        })
+        .then(dragons => res.json({ dragons }))
+        .catch(error => next(error));
 });
 
 export default router;
