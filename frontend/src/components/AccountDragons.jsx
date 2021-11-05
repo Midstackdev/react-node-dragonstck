@@ -9,13 +9,13 @@ const AccountDragons = () => {
     const dispatch = useDispatch();
     const { dragons } = useSelector(state => state.accountDragons);
 
-    // console.log(dragons);
+    console.log(dragons);
 
     useEffect(() => {
         dispatch(fetchAccountDragons())
     }, [dispatch]);
 
-    return (
+    return dragons.length > 0 ? (
         <div>
             <br />
             <h3>Account Dragons</h3>
@@ -29,6 +29,11 @@ const AccountDragons = () => {
             })}
             <Link to="/">Home</Link>
         </div>
+    ) : (
+        <>
+            <h4>Create dragons from the to own dragos here</h4>
+            <Link to="/">Home</Link>
+        </>
     )
 }
 

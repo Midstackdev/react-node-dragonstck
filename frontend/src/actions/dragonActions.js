@@ -17,3 +17,13 @@ export const fetchDragon = () => async(dispatch) => {
         console.error(error.response)
     }
 }
+
+export const updateDragon = async(formData) => {
+    try {
+        const {data} = await axios.put(`dragon/update`,  formData);
+        // console.log(data)
+        return data;
+    } catch (error) {
+        console.error(error.response);
+    }
+}
