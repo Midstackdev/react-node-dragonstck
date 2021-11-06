@@ -9,7 +9,7 @@ const AccountDragons = () => {
     const dispatch = useDispatch();
     const { dragons } = useSelector(state => state.accountDragons);
 
-    console.log(dragons);
+    // console.log(dragons);
 
     useEffect(() => {
         dispatch(fetchAccountDragons())

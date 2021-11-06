@@ -1,11 +1,13 @@
 import pool from '../../databasePool.js'
+import { STARTING_BALANCE } from '../config.js';
 
 class AccountTable {
     static storeAccount({ username, password }) {
         return new Promise((resolve, reject) => {
             pool.query(
-                `INSERT INTO account("usernameHash", "passwordHash") VALUES($1, $2)`,
-                [username, password],
+                `INSERT INTO account("usernameHash", "passwordHash", balance) 
+                VALUES($1, $2, $3)`,
+                [username, password, STARTING_BALANCE],
                 (error, response) => {
                     if(error) return reject(error);
 
@@ -17,7 +19,7 @@ class AccountTable {
 
     static getAccount({ username }) {
         return new Promise((resolve, reject) => {
-            pool.query(`SELECT id, "passwordHash", "sessionId" 
+            pool.query(`SELECT id, "passwordHash", "sessionId", balance 
                 FROM account 
                 WHERE "usernameHash" = $1`,
                 [username],
