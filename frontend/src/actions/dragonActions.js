@@ -21,7 +21,7 @@ export const fetchDragon = () => async(dispatch) => {
 export const updateDragon = async(formData) => {
     try {
         const {data} = await axios.put(`dragon/update`,  formData);
-        // console.log(data)
+        console.log(data)
         return data;
     } catch (error) {
         console.error(error.response);
