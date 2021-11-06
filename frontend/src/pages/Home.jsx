@@ -19,6 +19,8 @@ const Home = () => {
             <AccountInfo />
             <hr />
             <Link to="/dragons">Account Dragons</Link>
+            <br />
+            <Link to="/public-dragons">Public Dragons</Link>
             </>
         </div>
     )

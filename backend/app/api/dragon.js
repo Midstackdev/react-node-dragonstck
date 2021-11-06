@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import AccountDragonTable from '../accountDragon/table.js';
+import { getPublicDragons } from '../dragon/helper.js';
 import DragonTable from '../dragon/table.js';
 import { authenticateAccount } from './helper.js';
 
@@ -30,6 +31,12 @@ router.put('/update', (req, res, next) => {
 
     DragonTable.updateDragon({ dragonId, nickname, isPublic, saleValue })
         .then(() => res.json({ message: 'successfully updated dragon' }))
+        .catch(error => next(error));
+});
+
+router.get('/public', (req, res, next) => {
+    getPublicDragons()
+        .then(({ dragons }) => res.json({ dragons }))
         .catch(error => next(error));
 });
 

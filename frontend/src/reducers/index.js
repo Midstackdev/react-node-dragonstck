@@ -1,5 +1,5 @@
 import generation from './generationReducer';
-import dragon from './dragonReducer';
+import { dragonReducer as dragon, publicDragonsReducer as publicDragons} from './dragonReducer';
 import accountDragons from './accountDragonReducer';
 import account from './accountReducer';
 import accountInfo from './accountInfoReducer';
@@ -10,5 +10,6 @@ export default combineReducers({
     dragon,
     account,
     accountDragons,
-    accountInfo
+    accountInfo,
+    publicDragons
 });

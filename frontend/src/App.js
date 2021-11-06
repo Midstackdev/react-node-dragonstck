@@ -6,6 +6,7 @@ import './App.css';
 import AccountDragons from './components/AccountDragons';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import PublicDragons from './pages/PublicDragons';
 import store from './store';
 
 
@@ -31,6 +32,7 @@ const App = () => {
               <AuthRoute path="/" component={Home} exact />
               <Route path="/login" component={() => loggedIn ? <Redirect to="/" /> : <Login/>} />
               <AuthRoute path="/dragons" component={AccountDragons} />
+              <AuthRoute path="/public-dragons" component={PublicDragons} />
           </Switch>
       </div>
     </Router>

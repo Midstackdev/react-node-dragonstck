@@ -1,5 +1,5 @@
 import axios from "axios"
-import { DRAGON } from "../constants/dragonConstants"
+import { DRAGON, PUBLIC_DRAGON } from "../constants/dragonConstants"
 
 export const fetchDragon = () => async(dispatch) => {
     dispatch({ type: DRAGON.FETCH })
@@ -18,6 +18,23 @@ export const fetchDragon = () => async(dispatch) => {
     }
 }
 
+const fetchWithAxios = ({ options, FETCH_TYPE, SUCCESS_TYPE, ERROR_TYPE }) => async(dispatch) => {
+    dispatch({ type: FETCH_TYPE })
+    try {
+        const {data} = await axios(options);
+        dispatch({
+            type: SUCCESS_TYPE,
+            ...data
+        })
+    } catch (error) {
+        dispatch({ 
+            type: ERROR_TYPE,
+            message: error.response && error.response.data.message ? error.response.data.message : error.response
+        })
+        console.error(error.response)
+    }
+}
+
 export const updateDragon = async(formData) => {
     try {
         const {data} = await axios.put(`dragon/update`,  formData);
@@ -27,3 +44,13 @@ export const updateDragon = async(formData) => {
         console.error(error.response);
     }
 }
+
+export const fetchPublicDragons = () => fetchWithAxios({
+    options: {
+        method: 'get',
+        url: 'dragon/public',
+    },
+    FETCH_TYPE: PUBLIC_DRAGON.FETCH,
+    ERROR_TYPE: PUBLIC_DRAGON.FETCH_ERROR,
+    SUCCESS_TYPE: PUBLIC_DRAGON.FETCH_SUCCESS
+});
