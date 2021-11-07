@@ -38,7 +38,17 @@ const fetchWithAxios = ({ options, FETCH_TYPE, SUCCESS_TYPE, ERROR_TYPE }) => as
 export const updateDragon = async(formData) => {
     try {
         const {data} = await axios.put(`dragon/update`,  formData);
-        console.log(data)
+        // console.log(data)
+        return data;
+    } catch (error) {
+        console.error(error.response);
+    }
+}
+
+export const buyDragon = async(formData) => {
+    try {
+        const {data} = await axios.post(`dragon/buy`,  formData);
+        // console.log(data)
         return data;
     } catch (error) {
         console.error(error.response);
