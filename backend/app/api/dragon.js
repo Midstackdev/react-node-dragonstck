@@ -28,9 +28,9 @@ router.get('/new', (req, res, next) => {
 });
 
 router.put('/update', (req, res, next) => {
-    const {nickname, dragonId, isPublic, saleValue} = req.body;
+    const {nickname, dragonId, isPublic, saleValue, sireValue} = req.body;
 
-    DragonTable.updateDragon({ dragonId, nickname, isPublic, saleValue })
+    DragonTable.updateDragon({ dragonId, nickname, isPublic, saleValue, sireValue })
         .then(() => res.json({ message: 'successfully updated dragon' }))
         .catch(error => next(error));
 });
