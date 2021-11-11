@@ -55,6 +55,17 @@ export const buyDragon = async(formData) => {
     }
 }
 
+export const mateDragon = async(formData) => {
+    try {
+        const {data} = await axios.post(`dragon/mate`,  formData);
+        // console.log(data)
+        return data;
+    } catch (error) {
+        console.error(error.response);
+        return error;
+    }
+}
+
 export const fetchPublicDragons = () => fetchWithAxios({
     options: {
         method: 'get',

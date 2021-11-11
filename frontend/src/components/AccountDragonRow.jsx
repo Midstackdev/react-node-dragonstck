@@ -6,6 +6,7 @@ const AccountDragonRow = ({ dragon }) => {
     const [nickname, setNickname] = useState(dragon.nickname);
     const [isPublic, setIsPublic] = useState(dragon.isPublic);
     const [saleValue, setSaleValue] = useState(dragon.saleValue);
+    const [sireValue, setSireValue] = useState(dragon.sireValue);
     const [edit, setEdit] = useState(false);
 
     const togdleEdit = () => {
@@ -15,7 +16,7 @@ const AccountDragonRow = ({ dragon }) => {
     
     const save = () => {
         // console.log(dragon);
-        updateDragon({nickname, isPublic, saleValue, dragonId: dragon.dragonId})
+        updateDragon({nickname, isPublic, saleValue, sireValue, dragonId: dragon.dragonId})
             .then(() => {
                 togdleEdit();
             })
@@ -56,6 +57,16 @@ const AccountDragonRow = ({ dragon }) => {
                         disabled={!edit}
                         value={saleValue}
                         onChange={e => setSaleValue(e.target.value)}
+                        className="account-dragon-row-input"
+                        />
+                </span>
+                <span className="mx-3">
+                    Sire Value: {' '}
+                    <input type="number" 
+                        disabled={!edit}
+                        value={sireValue}
+                        onChange={e => setSireValue(e.target.value)}
+                        className="account-dragon-row-input"
                     />
                 </span>
                 <span className="mx-3">

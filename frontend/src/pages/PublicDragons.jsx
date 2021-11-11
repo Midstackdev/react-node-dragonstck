@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
+import { fetchAccountDragons } from "../actions/accountDragonActions";
 import { fetchPublicDragons } from "../actions/dragonActions";
 import PublicDragonRow from "../components/PublicDragonRow";
 
@@ -11,6 +12,7 @@ const PublicDragons = () => {
 
     useEffect(() => {
         dispatch(fetchPublicDragons());
+        dispatch(fetchAccountDragons())
     },[dispatch])
 
     return (

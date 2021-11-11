@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import AccountTable from '../account/table.js';
 import AccountDragonTable from '../accountDragon/table.js';
-import { getPublicDragons } from '../dragon/helper.js';
+import Breeder from '../dragon/breeder.js';
+import { getDragonWithTraits, getPublicDragons } from '../dragon/helper.js';
 import DragonTable from '../dragon/table.js';
 import { authenticateAccount } from './helper.js';
 
@@ -89,6 +90,77 @@ router.post('/buy', (req, res, next) => {
                 }),
                 DragonTable.updateDragon({
                     dragonId, isPublic: false
+                })
+            ])
+        })
+        .then(() => res.json({ message: 'success!' }))
+        .catch(error => next(error));
+});
+
+router.post('/mate', (req, res, next) => {
+    const { matronDragonId, patronDragonId } = req.body;
+
+    if(matronDragonId === patronDragonId) {
+        throw new Error('Cannot breed with the same dragon!');
+    }
+
+    let matronDragon, patronDragon, patronSireValue;
+    let matronAccountId, patronAccountId;
+
+    getDragonWithTraits({ dragonId: patronDragonId })
+        .then(dragon => {
+            if(!dragon.isPublic) {
+                throw new Error('Dragon must be public');
+            }
+            
+            patronDragon = dragon;
+            patronSireValue = dragon.sireValue;
+            
+            return getDragonWithTraits({ dragonId: matronDragonId });
+        })
+        .then(dragon => {
+            // if(!dragon.isPublic) {
+            //     throw new Error('Dragon must be public');
+            // }
+            
+            matronDragon = dragon;
+            
+            return authenticateAccount({ sessionString: req.cookies.sessionString })
+        })
+        .then(({ account, authenticated }) => {
+            if(!authenticated) {
+                throw new Error('Unauthenticated');
+            }
+            
+            if(patronSireValue > account.balance) {
+                throw new Error('Sire value exceeds balance');
+            }
+            
+            matronAccountId = account.id;
+            
+            return AccountDragonTable.getDragonAccount({ dragonId: patronDragonId });
+        })
+        .then(({ accountId }) => {
+            patronAccountId = accountId;
+            
+            if(patronAccountId === matronAccountId) {
+                throw new Error('Cannot breed youer own dragons!');
+            }
+
+            const dragon = Breeder.breedDragon({ matron: matronDragon, patron: patronDragon });
+
+            return DragonTable.storeDragon(dragon);
+        })
+        .then(({ dragonId }) => {
+            return Promise.all([
+                AccountTable.updateBalance({
+                    accountId: matronAccountId, value: -patronSireValue
+                }),
+                AccountTable.updateBalance({
+                    accountId: patronAccountId, value: patronSireValue
+                }),
+                AccountDragonTable.storeAccountDragon({
+                    dragonId, accountId: matronAccountId
                 })
             ])
         })
